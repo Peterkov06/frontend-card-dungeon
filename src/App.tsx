@@ -5,22 +5,7 @@ import PlayerStats from "./components/PlayerStats"
 import Deck from "./components/Deck"
 
 const App = () => {
-  const [cards, setCards] = useState<CardType[]>([])
-
-  useEffect(() => {
-    getData();
-  }, [])
-
-  async function getData()
-  {
-    const res = await fetch("cards.json");
-    if (!res.ok)
-    {
-      console.error("ERROR fetching data");
-    }
-    const result = await res.json();
-    setCards(result);
-  }
+  
   
 
   return (
