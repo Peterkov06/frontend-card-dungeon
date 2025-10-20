@@ -46,11 +46,11 @@ const Card = () => {
     {
       if (drawn in [0])
       {
-        await new Promise (res => setTimeout(res, 500))
+        await new Promise (res => setTimeout(res, 500));
       }
       if (drawn < 2)
       {
-        setDrawn(prev => prev + 1)
+        setDrawn(prev => prev + 1);
       }
     }
 

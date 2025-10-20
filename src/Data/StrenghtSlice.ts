@@ -9,13 +9,16 @@ export const strenghtSlice = createSlice(
     },
     reducers:
     {
-      modifyByValue: (state, action) =>
+      modifyStrenghtByValue: (state, action) =>
       {
-        state.value += action.payload
+        if (state.value + action.payload < 6)
+        {
+          state.value += action.payload;
+        }
       }
     }
   }
 )
 
-export const {modifyByValue} = strenghtSlice.actions
+export const {modifyStrenghtByValue} = strenghtSlice.actions
 export default strenghtSlice.reducer

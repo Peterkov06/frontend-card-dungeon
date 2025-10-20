@@ -2,6 +2,8 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '../Data/DataStore'
 import { moveBackInDeck, removeFromDeck, selectCard } from '../Data/DeckSlice';
+import { modifyHealthByValue } from '../Data/HealthSlice';
+import { modifyStrenghtByValue } from '../Data/StrenghtSlice';
 
 const Actions = () => {
 
@@ -16,16 +18,35 @@ const Actions = () => {
 
   const Fight = () =>
   {
-    const attackSuccess = RollTheDice(1,20);
-    var currentEnemy = deck[0];
+    const attackSuccess = RollTheDice(1,12);
+    let currentEnemy = deck[0];
     if (attackSuccess > currentEnemy.level)
     {
-      disp(removeFromDeck());
+      for (let y = 0; y < currentEnemy.reward.length; y++) {
+        if (currentEnemy.reward[y] === "❤")
+        {
+          disp(modifyHealthByValue(1));
+        }
+        else if (currentEnemy.reward[y] === "⚔")
+        {   
+          disp(modifyStrenghtByValue(1));
+        }
+      }
     }
     else
     {
-      console.log('Failure');
+      for (let index = 0; index < currentEnemy.penalty.length; index++) {
+        if (currentEnemy.penalty[index] === "❤")
+        {
+          disp(modifyHealthByValue(-1));
+        }
+        else if (currentEnemy.penalty[index] === "⚔")
+        {   
+          disp(modifyStrenghtByValue(-1));
+        }
+        }
     }
+    disp(removeFromDeck());
   }
 
   const RollTheDice = (min: number, max:number) =>
