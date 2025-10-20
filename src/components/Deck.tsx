@@ -4,15 +4,13 @@ import { selectCard } from '../Data/DeckSlice';
 import type { RootState } from '../Data/DataStore';
 
 const Deck = () => {
-  const [ind, setind] = useState(0);
-  const {deck} = useSelector((state:RootState) => state.deck);
+  const {deck, status} = useSelector((state:RootState) => state.deck);
   const disp = useDispatch();
 
   useEffect(() => {
-    if (deck.length > 0)
+    if (deck.length > 0 && status === "succeeded")
     {
       disp(selectCard())
-      console.log('first')
     }
   }, [deck.length])
   

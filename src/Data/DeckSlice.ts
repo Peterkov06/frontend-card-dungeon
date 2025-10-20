@@ -29,6 +29,8 @@ export const deckSlice = createSlice({
     },
     removeFromDeck: (state) =>
     {
+      console.log(state.deck.map(x => x.cardId));
+      console.log(state.currentCardID);
       state.deck = state.deck.filter((x) => x.cardId !== state.currentCardID)
     },
     moveBackInDeck: (state) =>
@@ -40,6 +42,7 @@ export const deckSlice = createSlice({
     {
       state.deck = action.payload;
       state.status = "succeeded";
+      selectCard();
     },
     loadingFailed: (state) => {
       state.status = 'failed';

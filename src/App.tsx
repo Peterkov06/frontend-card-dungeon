@@ -22,7 +22,6 @@ const App = () => {
     if (status === "idle")
     {
       dispatch(loadingStarted());
-      //await new Promise (res => setTimeout(res, 3000))
       const res = await fetch("/cards.json");
       if (!res.ok)
       {

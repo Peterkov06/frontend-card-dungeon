@@ -33,8 +33,8 @@ const Card = () => {
           drawing();
           break;
         case 1:
-        setClassList(`absolute top-23 right-26 z-10 transition-all select-none`);
-        break;
+          setClassList(`absolute top-23 right-26 z-10 transition-all select-none`);
+          break;
         case 2:
           setClassList("absolute top-[25%] left-[25%] transition-all scale-150 z-10 select-none");
           break;
@@ -68,7 +68,7 @@ const Card = () => {
             <p className='flex justify-center scale-[400%]'>{currentCard.enemyIcon}</p>
             <div>
               <p>Level: {currentCard.level}</p>
-              <p>Reward: {currentCard.revard}</p>
+              <p>Reward: {currentCard.reward}</p>
               <p>Penatlty: {currentCard.penalty}</p>
             </div>
           </div>
@@ -77,7 +77,7 @@ const Card = () => {
       {status === "failed" && 
         <p>Failed to fetch data</p>
       }
-      {drawn > 1 &&
+      {drawn > 1 && deck.length > 0 &&
       <Actions></Actions>
       }
     </div>)   
