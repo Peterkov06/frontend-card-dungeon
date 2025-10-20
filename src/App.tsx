@@ -32,7 +32,7 @@ const App = () => {
       const result: CardType[] = await res.json();
       const cardsWithID = result.map(x => ({...x, cardId: v4()}));
       dispatch(loadDeck(cardsWithID));
-      dispatch(selectCard(cardsWithID[0].cardId));
+
     }
   }
 
@@ -42,6 +42,7 @@ const App = () => {
         <PlayerStats></PlayerStats>
       </div>
       <div className="relative flex flex-row w-full h-full gap-2">
+        {}
         <Card></Card>
         <Deck></Deck>
       </div>

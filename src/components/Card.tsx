@@ -7,11 +7,13 @@ import Actions from './Actions';
 const Card = () => {
     const {deck, status, currentCardID} = useSelector((state:RootState) => state.deck);
     const [currentCard, setCurrCard] = useState<CardType | undefined>(undefined);
-    const [drawn, setDrawn] = useState(false);
+    const [drawn, setDrawn] = useState(-1);
+    const [classList,setClassList] = useState("absolute top-18 right-22 z-10 transition-none select-none hidden");
 
     useEffect(() => {
       if (currentCardID !== "")
       {
+        setDrawn(-1);
         setCurrCard(deck.filter(x => x.cardId === currentCardID)[0]);
       }
       else
@@ -19,19 +21,50 @@ const Card = () => {
         setCurrCard(undefined);
       }
     }, [currentCardID])
+
+    useEffect(() => {
+      switch (drawn) {
+        case -1:
+          setClassList(`absolute top-18 right-22 z-10 transition-all select-none`);
+          drawing();
+          break;
+        case 0:
+          setClassList(`absolute top-18 right-22 z-10 transition-all select-none`);
+          drawing();
+          break;
+        case 1:
+        setClassList(`absolute top-23 right-26 z-10 transition-all select-none`);
+        break;
+        case 2:
+          setClassList("absolute top-[25%] left-[25%] transition-all scale-150 z-10 select-none");
+          break;
+      }
+    }, [drawn])
     
 
+    const drawing = async () => 
+    {
+      if (drawn in [0])
+      {
+        await new Promise (res => setTimeout(res, 500))
+      }
+      if (drawn < 2)
+      {
+        setDrawn(prev => prev + 1)
+      }
+    }
+
   return (
-    <div className={drawn ? "absolute top-[25%] left-[25%] transition-all scale-150 z-10" : `flex flex-col items-center absolute top-24 right-26 z-10 transition-all`} onClick={() => setDrawn(true)}>
+    <div className={classList} onClick={drawing}>
       {status === "loading" &&
         <p>Loading the cards...</p>
       }
       { status === "succeeded" && deck.length > 0 && currentCard && 
         <div>
-          <div className='flex flex-col justify-center align-middle p-5 border-4 border-cyan-950 rounded-xl w-[10em] h-[16em] bg-gray-400 gap-15 z-20' style={{display: drawn ? "none" : "flex"}}>
+          <div className='flex flex-col justify-center align-middle p-5 border-4 border-cyan-950 rounded-xl w-[10em] h-[16em] bg-gray-400 gap-15 z-20 dis' style={{display: drawn === 2 && drawn > 0 ? "none" : "flex"}}>
 
           </div>
-          <div className='flex flex-col justify-center align-middle p-5 border-4 border-cyan-950 rounded-xl w-[10em] h-[16em] bg-white gap-15 z-20' style={{display: drawn ? "flex" : "none" }}>
+          <div className='flex flex-col justify-center align-middle p-5 border-4 border-cyan-950 rounded-xl w-[10em] h-[16em] bg-white gap-15 z-20' style={{display: drawn > 1 ? "flex" : "none" }}>
             <p className='flex justify-center scale-[400%]'>{currentCard.enemyIcon}</p>
             <div>
               <p>Level: {currentCard.level}</p>
@@ -44,7 +77,7 @@ const Card = () => {
       {status === "failed" && 
         <p>Failed to fetch data</p>
       }
-      {drawn &&
+      {drawn > 1 &&
       <Actions></Actions>
       }
     </div>)   

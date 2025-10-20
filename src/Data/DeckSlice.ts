@@ -20,21 +20,26 @@ export const deckSlice = createSlice({
   initialState,
   reducers:
   {
-    selectCard: (state, action: PayloadAction<string>) =>
+    selectCard: (state) =>
     {
-      state.currentCardID = action.payload;
+      state.currentCardID = state.deck[0].cardId;
     },
     loadingStarted: (state) => {
       state.status = 'loading';
     },
-    removeFromDeck: (state, action: PayloadAction<number>) =>
+    removeFromDeck: (state) =>
     {
-      state.deck = state.deck.filter((x, ind) => ind !== action.payload)
+      state.deck = state.deck.filter((x) => x.cardId !== state.currentCardID)
+    },
+    moveBackInDeck: (state) =>
+    {
+      const current = state.deck.shift();
+      current && state.deck.push(current);
     },
     loadDeck: (state, action: PayloadAction<CardType[]>) =>
     {
       state.deck = action.payload;
-      state.status = "succeeded"
+      state.status = "succeeded";
     },
     loadingFailed: (state) => {
       state.status = 'failed';
@@ -42,5 +47,5 @@ export const deckSlice = createSlice({
   }
 })
 
-export const {removeFromDeck, loadDeck, loadingFailed, loadingStarted, selectCard} = deckSlice.actions
+export const {removeFromDeck, loadDeck, loadingFailed, loadingStarted, selectCard, moveBackInDeck} = deckSlice.actions
 export default deckSlice.reducer
