@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { CardType } from "../types/CardType";
+import { GetRandom } from "../RandomGenerator";
 
 interface DeckState 
 {
@@ -22,15 +23,14 @@ export const deckSlice = createSlice({
   {
     selectCard: (state) =>
     {
-      state.currentCardID = state.deck[0].cardId;
+      const ind = GetRandom(0, state.deck.length - 1);
+      state.currentCardID = state.deck[ind].cardId;
     },
     loadingStarted: (state) => {
       state.status = 'loading';
     },
     removeFromDeck: (state) =>
     {
-      console.log(state.deck.map(x => x.cardId));
-      console.log(state.currentCardID);
       state.deck = state.deck.filter((x) => x.cardId !== state.currentCardID)
     },
     moveBackInDeck: (state) =>
@@ -42,7 +42,10 @@ export const deckSlice = createSlice({
     {
       state.deck = action.payload;
       state.status = "succeeded";
-      selectCard();
+      if (action.payload.length > 0)
+      {
+        state.currentCardID = action.payload[0].cardId;
+      }
     },
     loadingFailed: (state) => {
       state.status = 'failed';

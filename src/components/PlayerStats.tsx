@@ -7,7 +7,7 @@ const PlayerStats = () => {
   const playerStrenght = useSelector((state:RootState) => state.strenght.value);
   return (
     <div className='select-none scale-125'>
-      {playerHP && playerStrenght &&
+      {playerHP != null && playerStrenght != null &&
       <div>
         <p>{Array(playerHP).fill("").map(x => "❤")}{Array(5 - playerHP).fill("").map(x => "💀")}</p>
         <p>{Array(playerStrenght).fill("").map(x => "⚔")}</p>

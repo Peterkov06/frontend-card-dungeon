@@ -13,7 +13,7 @@ const Card = () => {
     useEffect(() => {
       if (currentCardID !== "")
       {
-        setDrawn(-1);
+        setDrawn(0);
         setCurrCard(deck.filter(x => x.cardId === currentCardID)[0]);
       }
       else

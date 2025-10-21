@@ -1,20 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectCard } from '../Data/DeckSlice';
-import type { RootState } from '../Data/DataStore';
 
 const Deck = () => {
-  const {deck, status} = useSelector((state:RootState) => state.deck);
-  const disp = useDispatch();
-
-  useEffect(() => {
-    if (deck.length > 0 && status === "succeeded")
-    {
-      disp(selectCard())
-    }
-  }, [deck.length])
-  
-
   return (
     <div className='top-10 right-14 ml-auto absolute'>
         <div className='flex flex-col justify-center align-middle p-5 border-4 border-cyan-950 rounded-xl w-[10em] h-[16em] gap-4 bg-gray-400 absolute top-0 right-0'></div>

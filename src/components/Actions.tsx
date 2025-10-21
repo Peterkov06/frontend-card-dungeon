@@ -2,13 +2,16 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '../Data/DataStore'
 import { moveBackInDeck, removeFromDeck, selectCard } from '../Data/DeckSlice';
-import { modifyHealthByValue } from '../Data/HealthSlice';
-import { modifyStrenghtByValue } from '../Data/StrenghtSlice';
+import { addStrenght, subtractStrenght } from '../Data/StrenghtSlice';
+import { addHealth, subtractHealth } from '../Data/HealthSlice';
+import { GetRandom } from '../RandomGenerator';
 
 const Actions = () => {
 
   const disp = useDispatch();
   const {deck, currentCardID} = useSelector((state:RootState) => state.deck);
+  const playerHP = useSelector((state:RootState) => state.health.value);
+  const playerStrenght = useSelector((state:RootState) => state.strenght.value);
 
   const Flee = () =>
   {
@@ -18,40 +21,39 @@ const Actions = () => {
 
   const Fight = () =>
   {
-    const attackSuccess = RollTheDice(1,12);
-    let currentEnemy = deck[0];
-    if (attackSuccess > currentEnemy.level)
+    const attackSuccess = GetRandom(1,6);
+    let currentEnemy = deck.find(x => x.cardId === currentCardID);
+    if (currentEnemy)
     {
-      for (let y = 0; y < currentEnemy.reward.length; y++) {
-        if (currentEnemy.reward[y] === "❤")
-        {
-          disp(modifyHealthByValue(1));
-        }
-        else if (currentEnemy.reward[y] === "⚔")
-        {   
-          disp(modifyStrenghtByValue(1));
+      if (attackSuccess + playerStrenght > currentEnemy.level)
+      {
+        for (let y = 0; y < currentEnemy.reward.length; y++) {
+          if (currentEnemy.reward[y] === "❤")
+          {
+            disp(addHealth(1));
+          }
+          else if (currentEnemy.reward[y] === "⚔")
+          {   
+            disp(addStrenght(1));
+          }
         }
       }
+      else
+      {
+        for (let index = 0; index < currentEnemy.penalty.length; index++) {
+          if (currentEnemy.penalty[index] === "❤")
+          {
+            disp(subtractHealth(1));
+          }
+          else if (currentEnemy.penalty[index] === "⚔")
+          {   
+            disp(subtractStrenght(1));
+          }
+          }
+      }
+      disp(removeFromDeck());
+      disp(selectCard());
     }
-    else
-    {
-      for (let index = 0; index < currentEnemy.penalty.length; index++) {
-        if (currentEnemy.penalty[index] === "❤")
-        {
-          disp(modifyHealthByValue(-1));
-        }
-        else if (currentEnemy.penalty[index] === "⚔")
-        {   
-          disp(modifyStrenghtByValue(-1));
-        }
-        }
-    }
-    disp(removeFromDeck());
-  }
-
-  const RollTheDice = (min: number, max:number) =>
-  {
-    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   return (

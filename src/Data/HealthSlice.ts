@@ -9,16 +9,23 @@ export const healthSlice = createSlice(
     },
     reducers:
     {
-      modifyHealthByValue: (state, action) =>
+      addHealth: (state, action) =>
       {
         if (state.value + action.payload < 6)
         {
           state.value += action.payload;
         }
+      },
+      subtractHealth: (state, action) =>
+      {
+        if (state.value - action.payload >= 0)
+          {
+            state.value -= action.payload;
+          }
       }
     }
   }
 )
 
-export const {modifyHealthByValue} = healthSlice.actions
+export const {addHealth, subtractHealth} = healthSlice.actions
 export default healthSlice.reducer
