@@ -5,7 +5,7 @@ export const strenghtSlice = createSlice(
     name: "strenght",
     initialState:
     {
-      value: 5
+      value: 0
     },
     reducers:
     {
