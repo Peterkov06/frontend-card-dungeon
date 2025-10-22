@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { loadDeck, loadingFailed, loadingStarted, selectCard } from "./Data/DeckSlice"
 import { v4 } from "uuid"
 import type { RootState } from "./Data/DataStore"
+import FleedCards from "./components/FleedCards"
 
 const App = () => {
   useEffect(() => {
@@ -31,6 +32,7 @@ const App = () => {
       const result: CardType[] = await res.json();
       const cardsWithID = result.map(x => ({...x, cardId: v4()}));
       dispatch(loadDeck(cardsWithID));
+      dispatch(selectCard());
 
     }
   }
@@ -41,7 +43,7 @@ const App = () => {
         <PlayerStats></PlayerStats>
       </div>
       <div className="relative flex flex-row w-full h-full gap-2">
-        {}
+        <FleedCards></FleedCards>
         <Card></Card>
         <Deck></Deck>
       </div>

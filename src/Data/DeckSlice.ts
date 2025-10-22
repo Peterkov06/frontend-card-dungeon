@@ -5,6 +5,7 @@ import { GetRandom } from "../RandomGenerator";
 interface DeckState 
 {
   deck: CardType[],
+  fleedCards: CardType[],
   status: "idle" | "loading" | "succeeded" | "failed",
   currentCardID: string,
 }
@@ -12,6 +13,7 @@ interface DeckState
 const initialState: DeckState =
 {
   deck: [],
+  fleedCards: [],
   status: "idle",
   currentCardID: "",
 }
@@ -33,19 +35,23 @@ export const deckSlice = createSlice({
     {
       state.deck = state.deck.filter((x) => x.cardId !== state.currentCardID)
     },
-    moveBackInDeck: (state) =>
+    removeFromFleed: (state, action: PayloadAction<string>) =>
     {
-      const current = state.deck.shift();
-      current && state.deck.push(current);
+      state.fleedCards = state.fleedCards.filter((x) => x.cardId !== action.payload)
+    },
+    fleeCurrent: (state) =>
+    {
+      const current = state.deck.find(x =>x.cardId == state.currentCardID);
+      if (current)
+      {
+        state.deck = state.deck.filter(x => x.cardId !== state.currentCardID);
+        state.fleedCards.push(current);
+      }
     },
     loadDeck: (state, action: PayloadAction<CardType[]>) =>
     {
       state.deck = action.payload;
       state.status = "succeeded";
-      if (action.payload.length > 0)
-      {
-        state.currentCardID = action.payload[0].cardId;
-      }
     },
     loadingFailed: (state) => {
       state.status = 'failed';
@@ -53,5 +59,5 @@ export const deckSlice = createSlice({
   }
 })
 
-export const {removeFromDeck, loadDeck, loadingFailed, loadingStarted, selectCard, moveBackInDeck} = deckSlice.actions
+export const {removeFromDeck, loadDeck, loadingFailed, loadingStarted, selectCard, fleeCurrent, removeFromFleed} = deckSlice.actions
 export default deckSlice.reducer

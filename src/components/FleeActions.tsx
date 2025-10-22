@@ -1,31 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '../Data/DataStore'
-import { fleeCurrent, removeFromDeck, selectCard } from '../Data/DeckSlice';
+import { removeFromFleed, selectCard } from '../Data/DeckSlice';
 import { addStrenght, subtractStrenght } from '../Data/StrenghtSlice';
 import { addHealth, subtractHealth } from '../Data/HealthSlice';
 import { GetRandom } from '../RandomGenerator';
 
-const Actions = () => {
+const FleeActions = (props: {currentCardID: string}) => {
 
   const disp = useDispatch();
-  const {deck, currentCardID, fleedCards} = useSelector((state:RootState) => state.deck);
+  const {fleedCards} = useSelector((state:RootState) => state.deck);
   const playerStrenght = useSelector((state:RootState) => state.strenght.value);
-  
-
-  const Flee = () =>
-  {
-    if (fleedCards.length < 2)
-    {
-      disp(fleeCurrent());
-      disp(selectCard());
-    }
-  }
 
   const Fight = () =>
   {
     const attackSuccess = GetRandom(1,6);
-    let currentEnemy = deck.find(x => x.cardId === currentCardID);
+    let currentEnemy = fleedCards.find(x => x.cardId === props.currentCardID);
     if (currentEnemy)
     {
       if (attackSuccess + playerStrenght > currentEnemy.level)
@@ -54,17 +44,15 @@ const Actions = () => {
           }
           }
       }
-      disp(removeFromDeck());
-      disp(selectCard());
+      disp(removeFromFleed(props.currentCardID));
     }
   }
 
   return (
     <div className='mt-5 flex flex-col gap-1'>
       <div onClick={Fight} className='w-40 h-10 border-4 border-cyan-950 bg-cyan-500 text-white rounded-lg font-bold text-lg text-center select-none cursor-pointer'>Fight</div>
-      <button onClick={Flee} className='w-40 h-10 border-4 border-cyan-950 bg-cyan-500 text-white rounded-lg font-bold text-lg text-center select-none cursor-pointer disabled:opacity-60 disabled:cursor-default' disabled={fleedCards.length === 2}>Flee</button>
     </div>
   )
 }
 
-export default Actions
+export default FleeActions

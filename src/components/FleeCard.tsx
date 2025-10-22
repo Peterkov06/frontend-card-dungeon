@@ -3,24 +3,11 @@ import type { RootState } from '../Data/DataStore';
 import type { CardType } from '../types/CardType';
 import { useEffect, useState } from 'react';
 import Actions from './Actions';
+import FleeActions from './FleeActions';
 
-const Card = () => {
-    const {deck, status, currentCardID} = useSelector((state:RootState) => state.deck);
-    const [currentCard, setCurrCard] = useState<CardType | undefined>(undefined);
-    const [drawn, setDrawn] = useState(-1);
+const FleeCard = (props: CardType) => {
+    const [drawn, setDrawn] = useState(2);
     const [classList,setClassList] = useState("absolute top-18 right-22 z-10 transition-none select-none hidden");
-
-    useEffect(() => {
-      if (currentCardID !== "")
-      {
-        setDrawn(0);
-        setCurrCard(deck.filter(x => x.cardId === currentCardID)[0]);
-      }
-      else
-      {
-        setCurrCard(undefined);
-      }
-    }, [currentCardID])
 
     useEffect(() => {
       switch (drawn) {
@@ -36,7 +23,7 @@ const Card = () => {
           setClassList(`absolute top-23 right-26 z-10 transition-all select-none`);
           break;
         case 2:
-          setClassList("absolute top-[25%] left-[35%] transition-all scale-150 z-10 select-none");
+          setClassList("absolute top-[25%] left-[25%] transition-all scale-150 z-10 select-none");
           break;
       }
     }, [drawn])
@@ -55,32 +42,24 @@ const Card = () => {
     }
 
   return (
-    <div className={classList} onClick={drawing}>
-      {status === "loading" &&
-        <p>Loading the cards...</p>
-      }
-      { status === "succeeded" && deck.length > 0 && currentCard && 
+    <div className={""} onClick={drawing}>
+      { props && 
         <div>
           <div className='flex flex-col justify-center align-middle p-5 border-4 border-cyan-950 rounded-xl w-[10em] h-[16em] bg-gray-400 gap-15 z-20 dis' style={{display: drawn === 2 && drawn > 0 ? "none" : "flex"}}>
 
           </div>
           <div className='flex flex-col justify-center align-middle p-5 border-4 border-cyan-950 rounded-xl w-[10em] h-[16em] bg-white gap-15 z-20' style={{display: drawn > 1 ? "flex" : "none" }}>
-            <p className='flex justify-center scale-[400%]'>{currentCard.enemyIcon}</p>
+            <p className='flex justify-center scale-[400%]'>{props.enemyIcon}</p>
             <div>
-              <p>Level: {currentCard.level}</p>
-              <p>Reward: {currentCard.reward}</p>
-              <p>Penatlty: {currentCard.penalty}</p>
+              <p>Level: {props.level}</p>
+              <p>Reward: {props.reward}</p>
+              <p>Penatlty: {props.penalty}</p>
             </div>
           </div>
+          <FleeActions currentCardID={props.cardId}></FleeActions>
         </div>
-      }
-      {status === "failed" && 
-        <p>Failed to fetch data</p>
-      }
-      {drawn > 1 && deck.length > 0 &&
-      <Actions></Actions>
       }
     </div>)   
 }
 
-export default Card
+export default FleeCard
